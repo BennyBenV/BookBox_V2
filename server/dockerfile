@@ -1,0 +1,20 @@
+# 1. On part d'une image de base officielle Node.js (version 18 légère "alpine")
+FROM node:18-alpine
+
+# 2. On crée un dossier de travail à l'intérieur du conteneur
+WORKDIR /app
+
+# 3. On copie d'abord les fichiers de dépendances (optimisation du cache)
+COPY package*.json ./
+
+# 4. On installe les dépendances
+RUN npm install
+
+# 5. On copie tout le reste du code source
+COPY . .
+
+# 6. On expose le port sur lequel notre application tourne
+EXPOSE 5000
+
+# 7. On définit le point d'entrée de l'application
+CMD ["npm", "run", "dev"]

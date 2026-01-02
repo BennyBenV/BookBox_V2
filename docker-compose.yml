@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  # 1. La Base de Données MongoDB
+  mongo:
+    image: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db # Pour ne pas perdre les données si on éteint le conteneur
+
+  # 2. Le Backend (API)
+  server:
+    build: ./server
+    ports:
+      - "5000:5000"
+    environment:
+      # L'astuce est ici : on n'utilise plus "localhost" mais le nom du service "mongo"
+      - MONGO_URI=mongodb+srv://devuser:SfqVVu!%40xhxMrw5@cluster0.aj8z3c4.mongodb.net/bookbox?retryWrites=true&w=majority
+      - JWT_SECRET=mysecuredsecretkey123
+      - GOOGLE_BOOKS_API_KEY=AIzaSyBckVEc1psixcNT4wywefuWaitN3WuxXDA
+
+    depends_on:
+      - mongo
+
+  # 3. Le Frontend (React/Nginx)
+  client:
+    build: ./client
+    ports:
+      - "8080:80" # On accèdera au site via http://localhost:8080
+    depends_on:
+      - server
+
+volumes:
+  mongo-data:
