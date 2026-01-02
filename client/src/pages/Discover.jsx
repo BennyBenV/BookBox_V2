@@ -46,8 +46,9 @@ const Discover = () => {
     // Fetch user profile for following list
     useEffect(() => {
         const fetchCurrentUserProfile = async () => {
-            if (user) {
-                const profile = await getUserProfile(user.id);
+            const userId = user?.id || user?._id;
+            if (userId) {
+                const profile = await getUserProfile(userId);
                 if (profile) {
                     setFollowingIds(profile.following.map(u => u._id || u));
                 }

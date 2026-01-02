@@ -82,10 +82,11 @@ const Profile = () => {
     // Fetch social data
     useEffect(() => {
         const fetchSocialData = async () => {
-            if (user) {
+            const userId = user?.id || user?._id;
+            if (userId) {
                 const [followersList, followingList] = await Promise.all([
-                    getFollowers(user.id),
-                    getFollowing(user.id)
+                    getFollowers(userId),
+                    getFollowing(userId)
                 ]);
                 setFollowers(followersList);
                 setFollowing(followingList);
