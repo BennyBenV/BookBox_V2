@@ -1,6 +1,8 @@
 import { createContext, useState, useContext, useCallback } from 'react';
 import axios from 'axios';
 import { useAuth } from './AuthContext';
+
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 import toast from 'react-hot-toast';
 
 const UserContext = createContext();
@@ -19,7 +21,7 @@ export const UserProvider = ({ children }) => {
                     Authorization: `Bearer ${token}`,
                 },
             };
-            const { data } = await axios.get(`http://localhost:5000/api/users/search?q=${query}`, config);
+            const { data } = await axios.get(`${API_URL}/api/users/search?q=${query}`, config);
             setSearchedUsers(data);
             return data;
         } catch (error) {
@@ -36,7 +38,7 @@ export const UserProvider = ({ children }) => {
                     Authorization: `Bearer ${token}`,
                 },
             };
-            const { data } = await axios.get(`http://localhost:5000/api/users/${id}`, config);
+            const { data } = await axios.get(`${API_URL}/api/users/${id}`, config);
             return data;
         } catch (error) {
             console.error(error);
@@ -53,7 +55,7 @@ export const UserProvider = ({ children }) => {
                     Authorization: `Bearer ${token}`,
                 },
             };
-            await axios.post(`http://localhost:5000/api/users/${userId}/follow`, {}, config);
+            await axios.post(`${API_URL}/api/users/${userId}/follow`, {}, config);
             toast.success('User followed!');
         } catch (error) {
             toast.error(error.response?.data?.message || 'Error following user');
@@ -68,7 +70,7 @@ export const UserProvider = ({ children }) => {
                     Authorization: `Bearer ${token}`,
                 },
             };
-            await axios.delete(`http://localhost:5000/api/users/${userId}/follow`, config);
+            await axios.delete(`${API_URL}/api/users/${userId}/follow`, config);
             toast.success('User unfollowed');
         } catch (error) {
             toast.error(error.response?.data?.message || 'Error unfollowing user');
@@ -83,7 +85,7 @@ export const UserProvider = ({ children }) => {
                     Authorization: `Bearer ${token}`,
                 },
             };
-            const { data } = await axios.get(`http://localhost:5000/api/users/${userId}/followers`, config);
+            const { data } = await axios.get(`${API_URL}/api/users/${userId}/followers`, config);
             return data;
         } catch (error) {
             console.error(error);
@@ -99,7 +101,7 @@ export const UserProvider = ({ children }) => {
                     Authorization: `Bearer ${token}`,
                 },
             };
-            const { data } = await axios.get(`http://localhost:5000/api/users/${userId}/following`, config);
+            const { data } = await axios.get(`${API_URL}/api/users/${userId}/following`, config);
             return data;
         } catch (error) {
             console.error(error);
@@ -115,7 +117,7 @@ export const UserProvider = ({ children }) => {
                     Authorization: `Bearer ${token}`,
                 },
             };
-            const { data } = await axios.get(`http://localhost:5000/api/users/${userId}/library`, config);
+            const { data } = await axios.get(`${API_URL}/api/users/${userId}/library`, config);
             return data;
         } catch (error) {
             console.error(error);
@@ -131,7 +133,7 @@ export const UserProvider = ({ children }) => {
                     Authorization: `Bearer ${token}`,
                 },
             };
-            const { data } = await axios.get('http://localhost:5000/api/users/feed', config);
+            const { data } = await axios.get(`${API_URL}/api/users/feed`, config);
             return data;
         } catch (error) {
             console.error(error);

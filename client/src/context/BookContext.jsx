@@ -1,6 +1,8 @@
 import { createContext, useState, useContext, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import { useAuth } from './AuthContext';
+
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 import toast from 'react-hot-toast';
 
 const BookContext = createContext();
@@ -31,7 +33,7 @@ export const BookProvider = ({ children }) => {
                     Authorization: `Bearer ${token}`,
                 },
             };
-            const { data } = await axios.get('http://localhost:5000/api/books', config);
+            const { data } = await axios.get(`${API_URL}/api/books`, config);
             setBooks(data);
             setLoading(false);
         } catch (error) {
@@ -48,7 +50,7 @@ export const BookProvider = ({ children }) => {
                     Authorization: `Bearer ${token}`,
                 },
             };
-            const { data } = await axios.post('http://localhost:5000/api/books', bookData, config);
+            const { data } = await axios.post(`${API_URL}/api/books`, bookData, config);
             setBooks([data, ...books]);
             toast.success('Book added successfully');
             return data;
@@ -66,7 +68,7 @@ export const BookProvider = ({ children }) => {
                     Authorization: `Bearer ${token}`,
                 },
             };
-            await axios.delete(`http://localhost:5000/api/books/${id}`, config);
+            await axios.delete(`${API_URL}/api/books/${id}`, config);
             setBooks(books.filter((book) => book._id !== id));
             toast.success('Book removed');
         } catch (error) {
@@ -82,7 +84,7 @@ export const BookProvider = ({ children }) => {
                     Authorization: `Bearer ${token}`,
                 },
             };
-            const { data } = await axios.put(`http://localhost:5000/api/books/${id}`, updatedData, config);
+            const { data } = await axios.put(`${API_URL}/api/books/${id}`, updatedData, config);
             setBooks(books.map((book) => (book._id === id ? data : book)));
             toast.success('Book updated');
         } catch (error) {
@@ -98,7 +100,7 @@ export const BookProvider = ({ children }) => {
                     Authorization: `Bearer ${token}`,
                 },
             };
-            const { data } = await axios.get(`http://localhost:5000/api/books/${id}`, config);
+            const { data } = await axios.get(`${API_URL}/api/books/${id}`, config);
             return data;
         } catch (error) {
             // console.error(error); // Optional: keep log but remove toast
@@ -115,7 +117,7 @@ export const BookProvider = ({ children }) => {
                     Authorization: `Bearer ${token}`,
                 },
             };
-            const { data } = await axios.get(`http://localhost:5000/api/search/${id}`, config);
+            const { data } = await axios.get(`${API_URL}/api/search/${id}`, config);
             return data;
         } catch (error) {
             console.error(error);
@@ -132,7 +134,7 @@ export const BookProvider = ({ children }) => {
                     Authorization: `Bearer ${token}`,
                 },
             };
-            const { data } = await axios.get(`http://localhost:5000/api/books/community/${googleId}`, config);
+            const { data } = await axios.get(`${API_URL}/api/books/community/${googleId}`, config);
             return data;
         } catch (error) {
             console.error(error);
@@ -148,7 +150,7 @@ export const BookProvider = ({ children }) => {
                     Authorization: `Bearer ${token}`,
                 },
             };
-            const { data } = await axios.get('http://localhost:5000/api/books/trending', config);
+            const { data } = await axios.get(`${API_URL}/api/books/trending`, config);
             return data;
         } catch (error) {
             console.error(error);
@@ -169,7 +171,7 @@ export const BookProvider = ({ children }) => {
             const limit = typeof maxResults === 'number' ? maxResults : 40;
             const silentMode = typeof maxResults === 'boolean' ? maxResults : silent;
 
-            const { data } = await axios.get(`http://localhost:5000/api/search?q=${query}&startIndex=${startIndex}&maxResults=${limit}&orderBy=${orderBy}`, config);
+            const { data } = await axios.get(`${API_URL}/api/search?q=${query}&startIndex=${startIndex}&maxResults=${limit}&orderBy=${orderBy}`, config);
 
             // Handle both legacy (array) and new (object) backend responses for safety during migration
             const results = Array.isArray(data) ? data : (data.items || []);
@@ -193,7 +195,7 @@ export const BookProvider = ({ children }) => {
                     Authorization: `Bearer ${token}`,
                 },
             };
-            const { data } = await axios.put(`http://localhost:5000/api/books/${bookId}/like`, {}, config);
+            const { data } = await axios.put(`${API_URL}/api/books/${bookId}/like`, {}, config);
             return data;
         } catch (error) {
             console.error(error);
@@ -210,7 +212,7 @@ export const BookProvider = ({ children }) => {
                     Authorization: `Bearer ${token}`,
                 },
             };
-            const { data } = await axios.get(`http://localhost:5000/api/books/${bookId}/comments`, config);
+            const { data } = await axios.get(`${API_URL}/api/books/${bookId}/comments`, config);
             return data;
         } catch (error) {
             console.error(error);
@@ -226,7 +228,7 @@ export const BookProvider = ({ children }) => {
                     Authorization: `Bearer ${token}`,
                 },
             };
-            const { data } = await axios.post(`http://localhost:5000/api/books/${bookId}/comments`, { content }, config);
+            const { data } = await axios.post(`${API_URL}/api/books/${bookId}/comments`, { content }, config);
             toast.success('Comment added');
             return data;
         } catch (error) {
@@ -244,7 +246,7 @@ export const BookProvider = ({ children }) => {
                     Authorization: `Bearer ${token}`,
                 },
             };
-            await axios.delete(`http://localhost:5000/api/comments/${commentId}`, config);
+            await axios.delete(`${API_URL}/api/comments/${commentId}`, config);
             toast.success('Comment deleted');
         } catch (error) {
             console.error(error);
