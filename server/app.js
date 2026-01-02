@@ -13,7 +13,10 @@ const app = express();
 
 // Middleware
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+    origin: process.env.CLIENT_URL || '*', // Allow Vercel domain in prod, wildcard in dev
+    credentials: true
+}));
 
 // Routes
 app.use('/api/auth', require('./routes/authRoutes'));
