@@ -13,6 +13,7 @@ import MyLibrary from './pages/MyLibrary';
 import UserProfile from './pages/UserProfile';
 import Discover from './pages/Discover';
 import SearchResults from './pages/SearchResults';
+import Settings from './pages/Settings';
 
 // Protected Route Component
 const ProtectedRoute = ({ children }) => {
@@ -76,6 +77,11 @@ function App() {
         <Route path="results" element={
           <ProtectedRoute>
             <SearchResults />
+          </ProtectedRoute>
+        } />
+        <Route path="settings" element={
+          <ProtectedRoute>
+            <Settings />
           </ProtectedRoute>
         } />
         <Route path="login" element={<Login />} />

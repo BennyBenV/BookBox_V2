@@ -2,7 +2,7 @@ import { Link, Outlet } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 import { Toaster } from 'react-hot-toast';
-import { FaMoon, FaSun, FaUser, FaLayerGroup, FaSearch, FaUserFriends, FaBook } from 'react-icons/fa';
+import { FaMoon, FaSun, FaUser, FaLayerGroup, FaSearch, FaUserFriends, FaBook, FaCog } from 'react-icons/fa';
 
 import logo from '../assets/logo.png';
 
@@ -16,6 +16,7 @@ const Layout = () => {
         { path: '/feed', icon: <FaUserFriends size={20} />, label: 'Fil' },
         { path: '/library', icon: <FaBook size={20} />, label: 'Ma Biblio' },
         { path: '/profile', icon: <FaUser size={20} />, label: 'Profil' },
+        { path: '/settings', icon: <FaCog size={20} />, label: 'Paramètres' },
     ];
 
     return (
@@ -66,8 +67,12 @@ const Layout = () => {
                                         className="p-2.5 rounded-full hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors text-slate-600 dark:text-slate-300"
                                         aria-label="My Profile"
                                     >
-                                        <div className="w-8 h-8 bg-slate-200 dark:bg-slate-600 rounded-full flex items-center justify-center text-[#D67456] dark:text-slate-200 font-bold border-2 border-white dark:border-slate-800 shadow-sm">
-                                            {user.username?.charAt(0).toUpperCase()}
+                                        <div className="w-8 h-8 rounded-full flex items-center justify-center bg-slate-200 dark:bg-slate-600 text-[#D67456] dark:text-slate-200 font-bold border-2 border-white dark:border-slate-800 shadow-sm overflow-hidden">
+                                            {user.profilePicture ? (
+                                                <img src={user.profilePicture} alt={user.username} className="w-full h-full object-cover" />
+                                            ) : (
+                                                user.username?.charAt(0).toUpperCase()
+                                            )}
                                         </div>
                                     </Link>
 

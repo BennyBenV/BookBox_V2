@@ -180,11 +180,44 @@ const getUserFeed = async (req, res) => {
         const books = await Book.find({ user: { $in: followingIds } })
             .sort({ dateAdded: -1 })
             .limit(50)
-            .populate('user', 'username');
+            .populate('user', 'username profilePicture'); // Include profile pic
 
         res.json(books);
     } catch (error) {
         console.error('Get user feed error:', error);
+        res.status(500).json({ message: error.message });
+    }
+};
+
+// @desc    Update user profile
+// @route   PUT /api/users/profile
+// @access  Private
+const updateUserProfile = async (req, res) => {
+    try {
+        const user = await User.findById(req.user.id);
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        user.username = req.body.username || user.username;
+        user.email = req.body.email || user.email;
+        user.profilePicture = req.body.profilePicture || user.profilePicture;
+
+        if (req.body.password) {
+            user.password = req.body.password;
+        }
+
+        const updatedUser = await user.save();
+
+        res.json({
+            _id: updatedUser._id,
+            username: updatedUser.username,
+            email: updatedUser.email,
+            profilePicture: updatedUser.profilePicture,
+            token: req.headers.authorization.split(' ')[1] // Keep existing token
+        });
+    } catch (error) {
         res.status(500).json({ message: error.message });
     }
 };
@@ -197,5 +230,6 @@ module.exports = {
     getFollowers,
     getFollowing,
     getUserLibrary,
-    getUserFeed
+    getUserFeed,
+    updateUserProfile
 };

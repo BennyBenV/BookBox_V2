@@ -55,13 +55,37 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
+    const updateProfile = async (userData) => {
+        try {
+            const token = localStorage.getItem('token');
+            const config = {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            };
+            const { data } = await axios.put(`${API_URL}/api/users/profile`, userData, config);
+            // Updating user state AND localStorage to persist changes
+            // Note: If token is refreshed by backend, update it. Current backend returns token.
+            if (data.token) {
+                localStorage.setItem('token', data.token);
+            }
+            // Update user object in state
+            // If backend returns full user object, use it.
+            // Our controller returns { _id, username, email, profilePicture, token }
+            setUser(prev => ({ ...prev, ...data }));
+            return data;
+        } catch (error) {
+            throw error;
+        }
+    };
+
     const logout = () => {
         setUser(null);
         localStorage.removeItem('token');
     };
 
     return (
-        <AuthContext.Provider value={{ user, login, register, logout, loading }}>
+        <AuthContext.Provider value={{ user, login, register, logout, loading, updateProfile }}>
             {children}
         </AuthContext.Provider>
     );

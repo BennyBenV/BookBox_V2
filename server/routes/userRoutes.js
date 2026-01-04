@@ -8,12 +8,14 @@ const {
     getFollowers,
     getFollowing,
     getUserLibrary,
-    getUserFeed
+    getUserFeed,
+    updateUserProfile
 } = require('../controllers/userController');
 const { protect } = require('../middleware/authMiddleware');
 
 router.get('/search', protect, searchUsers);
 router.get('/feed', protect, getUserFeed);
+router.put('/profile', protect, updateUserProfile); // New route
 router.get('/:id', protect, getUserProfile);
 router.post('/:id/follow', protect, followUser);
 router.delete('/:id/follow', protect, unfollowUser);
