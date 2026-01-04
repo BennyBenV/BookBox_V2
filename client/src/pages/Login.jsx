@@ -9,17 +9,21 @@ import logo from '../assets/logo.png';
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [serverError, setServerError] = useState(''); // New state for server errors
     const { login } = useAuth();
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setServerError(''); // Clear previous errors
         try {
             await login(email, password);
             toast.success('Connexion réussie !');
             navigate('/');
         } catch (error) {
-            toast.error(error.response?.data?.message || 'Échec de la connexion');
+            // Set server error state instead of only toast
+            const message = error.response?.data?.message || 'Échec de la connexion';
+            setServerError(message);
         }
     };
 
@@ -35,14 +39,22 @@ const Login = () => {
                         Ravis de vous revoir sur BookBox
                     </p>
                 </div>
+
+                {/* Error Alert Box */}
+                {serverError && (
+                    <div className="bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-300 px-4 py-3 rounded-xl text-sm font-bold text-center animate-pulse">
+                        {serverError}
+                    </div>
+                )}
+
                 <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
                     <div className="rounded-2xl shadow-sm -space-y-px">
                         <div>
                             <input
-                                type="email"
+                                type="text"
                                 required
                                 className="appearance-none rounded-none relative block w-full px-4 py-3 border border-slate-300 dark:border-slate-600 placeholder-slate-400 text-slate-900 dark:text-slate-100 dark:bg-slate-700/50 rounded-t-2xl focus:outline-none focus:ring-4 focus:ring-orange-100 dark:focus:ring-slate-600 focus:border-[#D67456] focus:z-10 text-base transition-all"
-                                placeholder="Adresse email"
+                                placeholder="Email ou Pseudo"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                             />

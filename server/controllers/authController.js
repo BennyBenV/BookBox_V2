@@ -1,22 +1,33 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const User = require('../models/User');
+const { validateRegister, validateLogin } = require('../middleware/validationMiddleware');
 
 // @desc    Register new user
 // @route   POST /api/auth/register
 // @access  Public
+// @desc    Register new user
+// @route   POST /api/auth/register
+// @access  Public
 const registerUser = async (req, res) => {
-    const { username, email, password } = req.body;
-
-    if (!username || !email || !password) {
-        return res.status(400).json({ message: 'Please add all fields' });
+    // Validate Input
+    const { error } = validateRegister(req.body);
+    if (error) {
+        return res.status(400).json({ message: error.details[0].message });
     }
 
-    // Check if user exists
-    const userExists = await User.findOne({ email });
+    const { username, email, password } = req.body;
 
-    if (userExists) {
-        return res.status(400).json({ message: 'User already exists' });
+    // Check if email exists
+    const emailExists = await User.findOne({ email });
+    if (emailExists) {
+        return res.status(400).json({ message: 'Cet email est déjà utilisé', field: 'email' });
+    }
+
+    // Check if username exists
+    const usernameExists = await User.findOne({ username });
+    if (usernameExists) {
+        return res.status(400).json({ message: 'Ce pseudo est déjà pris', field: 'username' });
     }
 
     // Create user
@@ -42,10 +53,21 @@ const registerUser = async (req, res) => {
 // @route   POST /api/auth/login
 // @access  Public
 const loginUser = async (req, res) => {
-    const { email, password } = req.body;
+    // Validate Input
+    const { error } = validateLogin(req.body);
+    if (error) {
+        return res.status(400).json({ message: error.details[0].message });
+    }
 
-    // Check for user email
-    const user = await User.findOne({ email });
+    const { email, password } = req.body; // 'email' field can contain username
+
+    // Check for user by Email OR Username
+    const user = await User.findOne({
+        $or: [
+            { email: email },
+            { username: email }
+        ]
+    });
 
     if (user && (await user.matchPassword(password))) {
         res.json({
@@ -55,7 +77,7 @@ const loginUser = async (req, res) => {
             token: generateToken(user._id)
         });
     } else {
-        res.status(401).json({ message: 'Invalid credentials' });
+        res.status(401).json({ message: 'Identifiant ou mot de passe incorrect' });
     }
 };
 

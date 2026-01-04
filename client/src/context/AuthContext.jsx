@@ -34,17 +34,25 @@ export const AuthProvider = ({ children }) => {
     }, []);
 
     const login = async (email, password) => {
-        const { data } = await axios.post(`${API_URL}/api/auth/login`, { email, password });
-        localStorage.setItem('token', data.token);
-        setUser(data);
-        return data;
+        try {
+            const { data } = await axios.post(`${API_URL}/api/auth/login`, { email, password });
+            localStorage.setItem('token', data.token);
+            setUser(data);
+            return data;
+        } catch (error) {
+            throw error;
+        }
     };
 
     const register = async (username, email, password) => {
-        const { data } = await axios.post(`${API_URL}/api/auth/register`, { username, email, password });
-        localStorage.setItem('token', data.token);
-        setUser(data);
-        return data;
+        try {
+            const { data } = await axios.post(`${API_URL}/api/auth/register`, { username, email, password });
+            localStorage.setItem('token', data.token);
+            setUser(data);
+            return data;
+        } catch (error) {
+            throw error;
+        }
     };
 
     const logout = () => {
