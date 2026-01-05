@@ -40,6 +40,10 @@ const addComment = async (req, res) => {
             content
         });
 
+        // Add comment reference to book
+        book.comments.push(comment._id);
+        await book.save();
+
         // Populate user details for immediate display
         await comment.populate('user', 'username');
 
@@ -64,6 +68,11 @@ const deleteComment = async (req, res) => {
         if (comment.user.toString() !== req.user.id) {
             return res.status(401).json({ message: 'User not authorized' });
         }
+
+        // Remove comment reference from book
+        await Book.findByIdAndUpdate(comment.book, {
+            $pull: { comments: req.params.id }
+        });
 
         await comment.deleteOne();
 

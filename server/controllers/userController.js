@@ -174,7 +174,7 @@ const getUserFeed = async (req, res) => {
             return res.status(404).json({ message: 'User not found' });
         }
 
-        const followingIds = currentUser.following;
+        const followingIds = [...currentUser.following, req.user.id]; // Include self
 
         const Book = require('../models/Book');
         const books = await Book.find({ user: { $in: followingIds } })

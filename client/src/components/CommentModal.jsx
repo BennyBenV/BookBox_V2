@@ -58,8 +58,14 @@ const CommentModal = ({ isOpen, onClose, bookId, bookTitle }) => {
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm animate-fade-in">
-            <div className="bg-white dark:bg-slate-800 rounded-3xl w-full max-w-lg max-h-[80vh] flex flex-col shadow-2xl overflow-hidden border border-slate-100 dark:border-slate-700">
+        <div
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm animate-fade-in"
+            onClick={onClose} // Close when clicking backdrop
+        >
+            <div
+                className="bg-white dark:bg-slate-800 rounded-3xl w-full max-w-lg max-h-[80vh] flex flex-col shadow-2xl overflow-hidden border border-slate-100 dark:border-slate-700"
+                onClick={(e) => e.stopPropagation()} // Prevent close when clicking inside
+            >
                 {/* Header */}
                 <div className="p-4 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center bg-slate-50 dark:bg-slate-800/50">
                     <div>

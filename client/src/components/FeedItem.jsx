@@ -73,12 +73,22 @@ const FeedItem = ({ activity, onCommentClick }) => {
                             <div>
                                 <div className="flex items-center gap-1 flex-wrap">
                                     <Link to={`/user/${activity.user._id}`} className="font-bold text-slate-900 dark:text-slate-100 hover:text-[#D67456] dark:hover:text-[#D67456] transition-colors">
-                                        {activity.user?.username}
+                                        {activity.user._id === user?.id || activity.user._id === user?._id ? 'Vous' : activity.user?.username}
                                     </Link>
                                     <span className="text-slate-500 dark:text-slate-400 text-sm">
-                                        {activity.type === 'ADDED' && 'a ajouté un livre'}
-                                        {activity.type === 'COMPLETED' && 'a fini de lire'}
-                                        {activity.type === 'RATED' && 'a noté un livre'}
+                                        {activity.user._id === user?.id || activity.user._id === user?._id ? (
+                                            <>
+                                                {activity.type === 'ADDED' && 'avez ajouté un livre'}
+                                                {activity.type === 'COMPLETED' && 'avez fini de lire'}
+                                                {activity.type === 'RATED' && 'avez noté un livre'}
+                                            </>
+                                        ) : (
+                                            <>
+                                                {activity.type === 'ADDED' && 'a ajouté un livre'}
+                                                {activity.type === 'COMPLETED' && 'a fini de lire'}
+                                                {activity.type === 'RATED' && 'a noté un livre'}
+                                            </>
+                                        )}
                                     </span>
                                 </div>
                                 <span className="text-xs text-slate-400 dark:text-slate-500 font-medium">
@@ -146,7 +156,7 @@ const FeedItem = ({ activity, onCommentClick }) => {
                             className="flex items-center gap-2 text-sm font-bold text-slate-400 dark:text-slate-500 hover:text-[#D67456] transition-colors"
                         >
                             <FaRegComment size={18} />
-                            <span>Commenter</span>
+                            <span>Commenter {activity.book.comments?.length > 0 && `(${activity.book.comments.length})`}</span>
                         </button>
                     </div>
                 </div>
