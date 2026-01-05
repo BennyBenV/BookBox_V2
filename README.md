@@ -97,7 +97,6 @@ docker-compose up --build
 ```
 
 ## 📝 Auteur
-Développé avec passion pour les amoureux des livres.
-
+Benjamin Vu
 ---
 *Projet réalisé dans le cadre d'un apprentissage Fullstack MERN.*
